@@ -5,82 +5,26 @@
 #include "cree_grille.h"
 
 
-bool alignement_impossible(char **grille, int M, int N) {
-  for (int i = 0; i < M; i++) {
-    for (int j = 0; j < N; j++) {
-      char symbole = grille[i][j];
-      int compteur = 1;
-
-      for (int k = j + 1; k < N; k++) {
-        if (grille[i][k] == symbole) {
-          compteur++;
-        } else {
-          break;
-        }
-      }
-      if (compteur >= 2) {
-        return true;
-      }
-    }
-  }
-  for (int i = 0; i < M; i++) {
-    for (int j = 0; j < N; j++) {
-      char symbole = grille[i][j];
-      int compteur = 1;
-
-      for (int k = i + 1; k < M; k++) {
-        if (grille[k][j] == symbole) {
-          compteur++;
-
-        } else {
-          break;
-        }
-      }
-      if (compteur >= 2) {
-        return true;
-      }
-    }
-  }
-  // diagonale de bas a en haut
-  for (int i = 2; i < M; i++) {
-    for (int j = 0; j < N - 2; j++) {
-      char symbole = grille[i][j];
-      int compteur = 1;
-
-      for (int k = i - 1, l = j + 1; k >= 0 && l < N; k--, l++) {
-        if (grille[k][l] == symbole) {
-          compteur++;
-
-        } else {
-          break;
-        }
-      }
-      if (compteur >= 2) {
-        return true;
-      }
-    }
-  }
-  for (int i = 2; i < M; i++) {
-    for (int j = 0; j < N - 2; j++) {
-      char symbole = grille[i][j];
-      int compteur = 1;
-
-      for (int k = i - 1, l = j + 1; k >= 0 && l < N; k--, l++) {
-        if (grille[k][l] == symbole) {
-          compteur++;
-
-        } else {
-          break;
-        }
-      }
-      if (compteur >= 2) {
-        return true;
-      }
-    }
-  }
-
+bool alignement_possible(char **grille, int M, int N) {
+	char grille_test;
+  	for (int i = 0; i<M;i++){
+  		for (int j =0; i<N;j++){
+  			//grille[i][j] est la case source
+  			for (int u = 0; u<M;u++){
+				for (int v=0; v<N;v++){
+					//grille[u][v] est la case déstination
+					grille_test = swap_symboles(grille,i,j,u,v);		
+					if (alignements(grille_test,M,N == true){
+						return true
+					}
+					grille_test = swap_symboles(grille,i,j,u,v);
+				}
+			}
+		}	
+	}
   return false;
 }
+
 
 bool alignements(char **grille, int M, int N) {
   int i, j, k;
@@ -106,8 +50,7 @@ bool alignements(char **grille, int M, int N) {
     }
   }
 
-  // diagonale 1 
-2 |  C D C
+  // diagonale 1
   for (i = 0; i < M - 2; i++) {
     for (j = 0; j < N - 2; j++) {
       symbole = grille[i][j];
@@ -192,8 +135,7 @@ void diagonale1(char **grille, int M, int N) {
       }
       if (compteur >= 3) {
         for (int k = 0; k < compteur; k++) {
-          grille[i + k][j + k] = ' ';C E 
-2 |  C D C
+          grille[i + k][j + k] = ' ';
         }
       }
     }
@@ -404,7 +346,7 @@ int main() {
          gravite(grille, M, N);
          affiche_grille(grille, M, N);
       	sup_alignements(grille, M, N);
-  } while (alignement_impossible(grille, M, N) == true);
+  } while (alignement_possible(grille, M, N) == true);
 
   for (int i = 0; i < M; i++) {
     free(grille[i]);
