@@ -2,8 +2,151 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#define TailleMax 100
 
 #define couleur(param) printf("\033[%sm", param)
+typedef struct {
+  int score, longueur, larg, nbSymb;
+  char **grille;
+  char nomJoueur[TailleMax];
+  time_t gametime;
+  
+} infospartie;
+
+bool asksave() {
+  char *commande;
+  printf("Voulez-vous sauvegarder votre partie ? (oui/non) : ");
+  scanf(" %s\n", commande); 
+  // pour savoir si l'utilisateur répond "oui" ou autre chose
+  if (strcmp(commande, "oui\n") == 0) {
+    return true;
+  } 
+  else {
+    return false;
+  }
+}
+
+
+
+bool askload() {
+  char commande[TailleMax];
+  printf("Voulez-vous charger une ancienne partie ? (oui/non) : ");
+  fgets(commande, TailleMax, stdin);
+  if (strcmp(commande, "oui") == 0) {
+    return true;
+  } 
+  else {
+    return false;
+  }
+}
+
+void savegame(infospartie *jeu, const char *nomFichier) {
+  FILE *fichier = fopen(nomFichier, "wb");
+  if (fichier != NULL) {
+    fwrite(jeu, sizeof(infospartie), 1, fichier);
+    fclose(fichier);
+    printf("Jeu sauvegardé avec succès dans le fichier : %s\n", nomFichier);
+  } 
+  else {
+    printf("Erreur lors de l'ouverture du fichier de sauvegarde.\n");
+  }
+}
+
+void afficherSauvegardes(){
+  FILE* fichier = fopen("sauvegardes.txt", "r");
+  if (fichier == NULL) {
+    printf("Aucune sauvegarde disponible.\n");
+    return;
+  }
+  infospartie sauvegarde;
+  int numsave=1;
+  printf("Sauvegardes disponibles :\n");
+  while (fread(&sauvegarde, sizeof(infospartie), 1, fichier)) {
+    printf("%d. Nom : %s Score: %d\n", numsave, sauvegarde.nomJoueur, sauvegarde.score);
+    numsave+=1;
+  }
+  fclose(fichier);
+}
+
+void loadgame(infospartie jeu, const char *nomFichier, int numeroChoisi) {
+  FILE *fichier = fopen(nomFichier, "rb");
+  infospartie sauvegarde;
+  int numeroSauvegarde = 1;
+  while (fread(&sauvegarde, sizeof(infospartie), 1, fichier)) {
+    if (numeroSauvegarde == numeroChoisi) {
+      printf("Sauvegarde %d chargée : Nom : %s Score: %d Temps de jeu: %ld secondes\n", numeroChoisi, sauvegarde.nomJoueur, sauvegarde.score, sauvegarde.gametime);
+      time_t debut, fin;
+      time(&debut);
+      affiche_grille (jeu.grille, jeu.larg, jeu.longueur);
+      time(&fin); 
+      time_t tempsJeu = fin - debut;
+      jeu.gametime +=tempsJeu;
+      fclose(fichier);
+      return;
+    }
+    numeroSauvegarde+=1;
+  }
+
+  fclose(fichier);
+  // Si on arrive ici, cela signifie que le numéro de sauvegarde choisi est invalide
+  printf("Numéro de sauvegarde invalide.\n");
+}
+
+bool checkwin(char **grille, int M, int N){
+  int symbol_count = 0;
+  for (int i = 0; i < M; i++) {
+      for (int j = 0; j < N; j++) {
+          if (grille[i][j] != ' ') {
+            symbol_count++;
+          }
+      }
+  }
+  if (symbol_count <= 2) {
+    printf( " Félicitations ! Vous avez gagné ! \n");
+    return 1; 
+  } 
+  else {
+    printf( " Dommage... vous avez perdu.\n");
+    return 0;
+  }
+}
+//à modifier pour trier les 
+void afficherHighscores(){
+  FILE* fichier = fopen("sauvegardes.txt", "r");
+  if (fichier == NULL) {
+    printf("Aucune sauvegarde disponible.\n");
+    return;
+  }
+  infospartie sauvegarde;
+  int numsave=1;
+  printf("Meilleurs scores :\n");
+  while (fread(&sauvegarde, sizeof(infospartie), 1, fichier)) {
+    printf("%d. Nom : %s Score: %d\n", numsave, sauvegarde.nomJoueur, sauvegarde.score);
+    numsave+=1;
+  }
+  fclose(fichier);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 bool alignements(char **grille, int M, int N) {
   int i, j, k;
