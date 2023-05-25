@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 #define couleur(param) printf("\033[%sm", param)
 
 bool alignements(char **grille, int M, int N) {
@@ -11,9 +12,11 @@ bool alignements(char **grille, int M, int N) {
   // horizontal
   for (i = 0; i < M; i++) {
     for (j = 0; j < N - 2; j++) {
-      symbole = grille[i][j];
-      if (grille[i][j + 1] == symbole && grille[i][j + 2] == symbole) {
-        return true;
+    	if (grille[i][j] != ' '){
+      		symbole = grille[i][j];
+      		if (grille[i][j + 1] == symbole && grille[i][j + 2] == symbole) {
+        		return true;
+        }
       }
     }
   }
@@ -21,29 +24,37 @@ bool alignements(char **grille, int M, int N) {
   // vertical
   for (j = 0; j < N; j++) {
     for (i = 0; i < M - 2; i++) {
+    if (grille[i][j] != ' '){		
       symbole = grille[i][j];
       if (grille[i + 1][j] == symbole && grille[i + 2][j] == symbole) {
         return true;
       }
+      }
+      
     }
   }
 
   // diagonale 1
   for (i = 0; i < M - 2; i++) {
     for (j = 0; j < N - 2; j++) {
+    if (grille[i][j] != ' '){
       symbole = grille[i][j];
       if (grille[i + 1][j + 1] == symbole && grille[i + 2][j + 2] == symbole) {
         return true;
+      }
       }
     }
   }
   // diagonale 2
   for (i = 0; i < M - 2; i++) {
     for (j = 2; j < N; j++) {
+    if (grille[i][j] != ' '){
       symbole = grille[i][j];
       if (grille[i + 1][j - 1] == symbole && grille[i + 2][j - 2] == symbole) {
         return true;
       }
+      }
+      
     }
   }
 
@@ -138,8 +149,8 @@ void diagonale2(char **grille, int M, int N) {
         }
       }
 
-      if (compteur >= 3) {
-        for (int k = 0; k < compteur; k++) {
+      if(compteur >= 3) {
+        for (int k = 0; k < compteur; k++){
           grille[i - k][j + k] = ' ';
         }
       }
@@ -151,10 +162,10 @@ void affiche_grille(char **grille, int M, int N, int score, int num_symbole) {
   printf("Grille : \n");
   printf("  ");
   for (int x = 0; x < N; x++) {
-    printf(" %d", x);
+    	printf(" %d", x);
   }
   printf("\n");
-
+  
   printf("   ");
   for (int z = 0; z < N; z++) {
 
@@ -214,7 +225,7 @@ void affiche_grille(char **grille, int M, int N, int score, int num_symbole) {
           couleur("32");
         }
         if (grille[i][j] == 'F') {
-          couleur("36");
+          couleur("37");
         }
       }
 
@@ -224,7 +235,7 @@ void affiche_grille(char **grille, int M, int N, int score, int num_symbole) {
     printf("\n");
   }
 
-  printf("%d \n", score);
+  printf("Nombre de coup : %d \n", score);
 }
 
 void gravite(char **grille, int M, int N) {
@@ -256,20 +267,35 @@ char **swap_symboles(char **grille, int x1, int y1, int x2, int y2) {
 bool alignement_possible(char **grille, int M, int N) {
   char **grille_test;
   for (int i = 0; i < M; i++) {
-    for (int j = 0; i < N; j++) {
-      // grille[i][j] est la case source
+    for (int j = 0; j < N; j++) {
+      		// grille[i][j] est la case source
       for (int u = 0; u < M; u++) {
         for (int v = 0; v < N; v++) {
           // grille[u][v] est la case déstination
-          grille_test = swap_symboles(grille, i, j, u, v);
+          //printf("Swap before test...i=%d j=%d u=%d v=%d M=%d N=%d\n",i,j,u,v, M,N);
+          //fflush(stdout);
+          grille_test = swap_symboles(grille, j, i, v, u);
+          //printf("    done...\n");
+          //fflush(stdout);
           if (alignements(grille_test, M, N) == true) {
-            return true;
+		  //printf("Swap after test OK...\n");
+		  //fflush(stdout);
+             grille_test = swap_symboles(grille, j, i, v, u);
+          //printf("    done...\n");
+          //fflush(stdout);
+             return true;
           }
-          grille_test = swap_symboles(grille, i, j, u, v);
-        }
+	  //printf("Swap after test NOK...\n");
+	  //fflush(stdout);
+          grille_test = swap_symboles(grille, j, i, v, u);
+        //printf("    done...\n");
+          //fflush(stdout);
+          }
       }
     }
   }
+  printf("Fin de partie detectee \n");
+  fflush(stdout);
   return false;
 }
 
@@ -316,7 +342,7 @@ void remplis(char **grille, int M, int N, int num_symboles) {
 }
 
 int main() {
-
+	
   int score = 0;
   int M, N, num_symboles;
   char **grille;
@@ -332,7 +358,7 @@ int main() {
   } while (num_symboles < 4 || num_symboles > 6 || sizeof(num_symboles) == 1);
 
   grille = cree_grille(M, N, num_symboles);
-
+	
   do {
     sup_alignements(grille, M, N);
     remplis(grille, M, N, num_symboles);
@@ -340,60 +366,68 @@ int main() {
   } while (alignements(grille, M, N) == true);
 
   affiche_grille(grille, M, N, score, num_symboles);
-  int x1, y1, x2, y2;
+  int x1=0, y1=0, x2=0, y2=0;
 
   do {
+  	affiche_grille(grille, M, N, score, num_symboles);
     do {
       printf("Choisir les coordonnées du points a changer x:");
       scanf("%d", &x1);
-    } while (x1 < 0 || x1 > M - 1 || x1 == ' ');
+    } while (x1 < 0 || x1 > N - 1 || x1 == ' ');
     do {
       printf("Choisir les coordonnées du points a changer y:");
       scanf("%d", &y1);
-    } while (y1 < 0 || y1 > N - 1 || y1 == ' ');
+    } while (y1 < 0 || y1 > M - 1 || y1 == ' ');
     do {
       printf("Choisir les coordonnées du points échanger x:");
       scanf("%d", &x2);
-    } while (x2 < 0 || x2 > M - 1 || x2 == ' ');
+    } while (x2 < 0 || x2 > N - 1 || x2 == ' ');
     do {
       printf("Choisir les coordonnées du points échanger y:");
       scanf("%d", &y2);
-    } while (y2 < 0 || y2 > N - 1 || y2 == ' ');
+    } while (y2 < 0 || y2 > M - 1 || y2 == ' ');
 
+	affiche_grille(grille, M, N, score, num_symboles);
+
+	
     grille = swap_symboles(grille, x1, y1, x2, y2);
+    	
+    
     if (alignements(grille, M, N) == false) {
-      do {
+     	while (alignements(grille, M, N) == false){
 
         grille = swap_symboles(grille, x1, y1, x2, y2);
-
+	printf("Le déplacement n'est pas possible !\n");
         do {
           printf("Choisir les nouvelles coordonnées du points a changer x:");
           scanf("%d", &x1);
-        } while (x1 < 0 || x1 > M - 1 || x1 == ' ');
+        } while (x1 < 0 || x1 > N - 1 || x1 == ' ');
         do {
           printf("Choisir les nouvelles coordonnées du points a changer y:");
           scanf("%d", &y1);
-        } while (y1 < 0 || y1 > N - 1 || y1 == ' ');
+        } while (y1 < 0 || y1 > M - 1 || y1 == ' ');
         do {
           printf("Choisir les nouvelles coordonnées du points échanger x:");
           scanf("%d", &x2);
-        } while (x2 < 0 || x2 > M - 1 || x2 == ' ');
+        } while (x2 < 0 || x2 > N - 1 || x2 == ' ');
         do {
           printf("Choisir les nouvelles coordonnées du points échanger y:");
           scanf("%d", &y2);
-        } while (y2 < 0 || y2 > N - 1 || y2 == ' ');
+        } while (y2 < 0 || y2 > M - 1 || y2 == ' ');
 
         grille = swap_symboles(grille, x1, y1, x2, y2);
 
-      } while (alignements(grille, M, N) == false);
+      } 
+
     }
 
     do {
-
+	
       sup_alignements(grille, M, N);
+    
       gravite(grille, M, N);
     } while (alignements(grille, M, N) == true);
-
+	score +=1;
     affiche_grille(grille, M, N, score, num_symboles);
 
   } while (alignement_possible(grille, M, N) == true);
