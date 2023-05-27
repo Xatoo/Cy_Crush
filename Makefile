@@ -1,16 +1,18 @@
-all: main
+CC = gcc
+CFLAGS = -Wall -Wextra
 
-CC = clang
-override CFLAGS += -g -Wno-everything -pthread -lm
+SRCS = main.c alignement.c sauvegarde.c grille.c
+OBJS = $(SRCS:.c=.o)
+EXEC = exe
 
-SRCS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.c' -print)
-HEADERS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.h' -print)
+all: $(EXEC)
 
-main: $(SRCS) $(HEADERS)
-	$(CC) $(CFLAGS) $(SRCS) -o "$@"
+$(EXEC): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(EXEC)
 
-main-debug: $(SRCS) $(HEADERS)
-	$(CC) $(CFLAGS) -O0 $(SRCS) -o "$@"
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f main main-debug
+	rm -f $(OBJS) $(EXEC)
+
