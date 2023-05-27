@@ -97,19 +97,19 @@ int main() {
     }
     beg = time(NULL);
     do {
-      printf("Choisir les coordonnées du points a changer x:");
+      printf("Choisir les coordonnées du point à changer x:");
       scanf("%d", &x1);
     } while (x1 < 0 || x1 > N - 1);
     do {
-      printf("Choisir les coordonnées du points a changer y:");
+      printf("Choisir les coordonnées du point à changer y:");
       scanf("%d", &y1);
     } while (y1 < 0 || y1 > M - 1);
     do {
-      printf("Choisir les coordonnées du points échanger x:");
+      printf("Choisir les coordonnées du point à échanger x:");
       scanf("%d", &x2);
     } while (x2 < 0 || x2 > N - 1);
     do {
-      printf("Choisir les coordonnées du points échanger y:");
+      printf("Choisir les coordonnées du point à échanger y:");
       scanf("%d", &y2);
     } while (y2 < 0 || y2 > M - 1);
 
@@ -121,19 +121,19 @@ int main() {
         grid = swap_symbols(grid, x1, y1, x2, y2);
         printf("Le déplacement n'est pas possible !\n");
         do {
-          printf("Choisir les nouvelles coordonnées du points a changer x:");
+          printf("Choisir les nouvelles coordonnées du point à changer x:");
           scanf("%d", &x1);
         } while (x1 < 0 || x1 > N - 1);
         do {
-          printf("Choisir les nouvelles coordonnées du points a changer y:");
+          printf("Choisir les nouvelles coordonnées du point à changer y:");
           scanf("%d", &y1);
         } while (y1 < 0 || y1 > M - 1);
         do {
-          printf("Choisir les nouvelles coordonnées du points échanger x:");
+          printf("Choisir les nouvelles coordonnées du point à échanger x:");
           scanf("%d", &x2);
         } while (x2 < 0 || x2 > N - 1);
         do {
-          printf("Choisir les nouvelles coordonnées du points échanger y:");
+          printf("Choisir les nouvelles coordonnées du point à échanger y:");
           scanf("%d", &y2);
         } while (y2 < 0 || y2 > M - 1);
 
