@@ -17,14 +17,14 @@ int emptyFile(const char *nameFile) {
   }
   return 0;
 }
-void saveGrid(char **grille, int M, int N, const char *nameFile) {
+void saveGrid(char **grid, int M, int N, const char *nameFile) {
   //enregistre la grille dans un fichier txt
   
   FILE *file = fopen(nameFile, "w");
 
   for (int i = 0; i < M; i++) {
     for (int j = 0; j < N; j++) {
-      fprintf(file, "%c ", grille[i][j]);
+      fprintf(file, "%c ", grid[i][j]);
     }
     fprintf(file, "\n");
   }
