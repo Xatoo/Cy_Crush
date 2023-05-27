@@ -17,7 +17,9 @@ int main() {
   char **grid;
   char name[100];
   int ans1, ans2;
-
+  
+  //on commence par savoir si le joueur veut charger la derniere partie sauvegarder ou en commencer une autre 
+  
   printf("Entrez votre pseudo pour commencer à jouer :");
   scanf("%s", name);
   printf("Bonjour %s, si vous voulez charger la dernière partie enregistrée "
@@ -26,7 +28,6 @@ int main() {
   scanf("%d", &ans1);
   if (ans1 == 0) {
     if (emptyFile("grille.txt") == 0) {
-      printf("hello\n");
 
       loadData("data.txt", &tms, &M, &N, &score, &num_symbols);
       FILE *file = fopen("grille.txt", "r+");
