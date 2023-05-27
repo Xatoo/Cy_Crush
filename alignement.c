@@ -55,7 +55,7 @@ int alignment(char **grid, int M, int N) {
       if (grid[i][j] != ' ') {
         symbole = grid[i][j];
         if (grid[i + 1][j - 1] == symbole &&
-            grille[i + 2][j - 2] == symbole) {
+            grid[i + 2][j - 2] == symbole) {
           return 1;
         }
       }
